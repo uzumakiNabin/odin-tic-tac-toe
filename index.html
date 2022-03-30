@@ -10,40 +10,44 @@
 </head>
 <body>
     <h1>Odin Tic-Tac-Toe</h1>
-    <div class="playerSelection">
-        <fieldset id="firstPlayer">
-            <legend>First Player</legend>
-            <input type="radio" name="player1" id="computer1" value="computer1">
-            <label for="computer1">Computer</label>
-            <input type="radio" name="player1" id="human1" value="human1">
-            <label for="human1">Human</label>
-            <input type="text" value="" name="player1name" id="player1name" placeholder="Player 1" maxlength="10">
-        </fieldset>
-        <fieldset id="secondPlayer">
-            <legend>Second Player</legend>
-            <input type="radio" name="player2" id="computer2" value="computer2">
-            <label for="computer2">Computer</label>
-            <input type="radio" name="player2" id="human2" value="human2">
-            <label for="human2">Human</label>
-            <input type="text" value="" name="player2name" id="player2name" placeholder="Player 2" maxlength="10">
-        </fieldset>
-        <input type="button" value="Start game" id="start">
-    </div>
-    <div class="showTurn"></div>
-    <div class="gameboard">
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-        <div class="square"></div>
-    </div>
-    <div class="showWinner"></div>
-    <div class="restartGame">
-        <input type="button" value="Restart game" id="restart">
+    <div class="container">
+        <div class="playerSelection">
+            <fieldset id="firstPlayer">
+                <legend>First Player</legend>
+                <input type="radio" name="player1" id="computer1" value="computer1">
+                <label for="computer1">Computer</label>
+                <input type="radio" name="player1" id="human1" value="human1">
+                <label for="human1">Human</label>
+                <input type="text" value="" name="player1name" id="player1name" placeholder="Player 1" maxlength="10">
+            </fieldset>
+            <fieldset id="secondPlayer">
+                <legend>Second Player</legend>
+                <input type="radio" name="player2" id="computer2" value="computer2">
+                <label for="computer2">Computer</label>
+                <input type="radio" name="player2" id="human2" value="human2">
+                <label for="human2">Human</label>
+                <input type="text" value="" name="player2name" id="player2name" placeholder="Player 2" maxlength="10">
+            </fieldset>
+            <input type="button" value="Start game" id="start">
+        </div>
+        <div class="gameContainer">
+            <div class="showTurn"></div>
+            <div class="gameboard">
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+            </div>
+            <div class="showWinner"></div>
+        </div>
+        <!-- <div class="restartGame">
+            <input type="button" value="Restart game" id="restart">
+        </div> -->
     </div>
 </body>
 </html>

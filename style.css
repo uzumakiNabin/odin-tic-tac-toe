@@ -1,15 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Roboto:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap');
+
 *{
     box-sizing: border-box;
 }
 
+body{
+    font-family: 'Merriweather', serif;
+    color: #344e41;
+    background-color: #dad7cd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1{
+    margin: 0px;
+    font-weight: 900;
+}
+
+.container{
+    background-color: #a3b18a;
+    width: max(40%, 500px);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 6px 2px #a3b18a;
+}
+
+fieldset{
+    border: 0px;
+    margin-bottom: 15px;
+}
+
+legend{
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 13px;
+}
+
+label{
+    margin-right: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+input[type='text']{
+    border: 0px;
+    background-color: #dad7cd;
+    border-radius: 2px;
+    padding: 5px 8px;
+}
+
+input[type='text']:active{
+    border: 1px solid #00f;
+}
+
+input[type='button']{
+    background-color: #3a5a40;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 20px;
+    border: 0px;
+    border-radius: 4px;
+    margin: 8px;
+    cursor: pointer;
+}
+
+.gameContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.showTurn{
+    color:#3a5a40;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 20px 4px;
+}
+
 .gameboard{
     width: fit-content;
-    background-color: #000;
     display: grid;
     grid-template-columns: repeat(3, 50px);
     grid-template-rows: repeat(3, 50px);
     row-gap: 2px;
     column-gap: 2px;
+    box-shadow: 0px 0px 2px 3px #fff;
+    border-radius: 5px;
+}
+
+.showWinner{
+    color:#3a5a40;
+    font-size: 16px;
+    font-weight: 900;
+    margin: 20px 4px;
 }
 
 .square{
