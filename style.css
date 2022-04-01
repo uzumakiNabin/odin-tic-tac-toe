@@ -15,7 +15,7 @@ body{
 }
 
 h1{
-    margin: 0px;
+    margin: 8px 0px;
     font-weight: 900;
 }
 
@@ -116,6 +116,6 @@ input[type='button']{
 fieldset span{
     display: block;
     color: #ffba08;
-    font-size: 12px;
-    font-weight: 300;
+    font-size: 13px;
+    font-weight: 700;
 }
