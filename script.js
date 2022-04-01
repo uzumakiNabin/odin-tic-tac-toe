@@ -135,8 +135,18 @@ const display = (() =>{
         winnerField.textContent = '';
     }
 
-    return {playerOneRadio, playerOneNameInput, playerTwoRadio, playerTwoNameInput, startButton, gameContainer, gameBoardEl,
-            renderBoard, getPlayerTypes, showWhosTurn, showWinCondition, clearAll};
+    const toggleSelectionFields = () => {
+        playerOneRadio.forEach(radio => {
+            radio.disabled = !radio.disabled;
+        })
+        playerOneNameInput.disabled = !playerOneNameInput.disabled;
+        playerTwoRadio.forEach(radio => {
+            radio.disabled = !radio.disabled;
+        })
+        playerTwoNameInput.disabled = !playerTwoNameInput.disabled;
+    }
+
+    return {startButton, gameContainer, gameBoardEl, renderBoard, getPlayerTypes, showWhosTurn, showWinCondition, clearAll, toggleSelectionFields};
 })();
 
 const game = (() => {
@@ -171,6 +181,7 @@ const game = (() => {
     //wrapper function for 'reset game' button so we can remove event listener later
     const resetEventFunctionWrapper = () => {
         display.startButton.value = 'Start game';
+        display.toggleSelectionFields();
         display.startButton.removeEventListener('click', resetEventFunctionWrapper);
         init();
         display.gameContainer.style.display = 'none';
@@ -182,6 +193,7 @@ const game = (() => {
         display.startButton.value = 'Reset game';
         display.startButton.removeEventListener('click', initEventFunctionWrapper);
         display.startButton.addEventListener('click', resetEventFunctionWrapper);
+        display.toggleSelectionFields();
         gameboard.resetBoard();
         display.gameContainer.style.display = 'flex';
         display.renderBoard();
