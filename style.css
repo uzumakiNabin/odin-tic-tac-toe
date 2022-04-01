@@ -69,7 +69,7 @@ input[type='button']{
 }
 
 .gameContainer{
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
 }
@@ -108,4 +108,14 @@ input[type='button']{
     font-weight: bolder;
     padding: 4px;
     cursor: default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+fieldset span{
+    display: block;
+    color: #ffba08;
+    font-size: 12px;
+    font-weight: 300;
 }

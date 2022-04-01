@@ -9,50 +9,219 @@ const winConditions = [
     [2, 4, 6]
 ];
 
-const player = (name, sign) => {
-    const getName = () => name;
-    const getSign = () => sign;
-    const mark = (square) => {
-        square.textContent = sign;
-    }
-    return {getName, getSign, mark};
-};
-
-const gameboard = () => {
+const gameboard = (() => {
     let board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     const getBoard = () => board;
+
+    const getUnmarkedSquares = () => {
+        let unmarkedSquares = [];
+        board.forEach((value, index) => {
+            if(value === 0){
+                unmarkedSquares.push(index);
+            }
+        });
+        return unmarkedSquares;
+    }
 
     const updateBoard = (sign, index) => {
         board[index] = sign;
     }
 
-    return {getBoard, updateBoard};
-}
+    const resetBoard = () => {
+        board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
 
-const game = (name1, name2) => {
+    return {getBoard, getUnmarkedSquares, updateBoard, resetBoard};
+})();
+
+const display = (() =>{
+    const playerOneRadio = document.getElementsByName('player1');
+    const playerOneNameInput = document.getElementById('player1name');
+    const playerTwoRadio = document.getElementsByName('player2');
+    const playerTwoNameInput = document.getElementById('player2name');
+    const playerOneErrorField = document.getElementById('player1error');
+    const playerTwoErrorField = document.getElementById('player2error');
+    const startButton = document.getElementById('start');
+    const gameContainer = document.getElementsByClassName('gameContainer')[0];
+    const gameBoardEl = document.getElementsByClassName('gameboard')[0];
     const turnField = document.getElementsByClassName('showTurn')[0];
     const winnerField = document.getElementsByClassName('showWinner')[0];
 
-    const player1 = player(name1, 'X');
-    const player2 = player(name2, 'O');
-    const board = gameboard();
-
-    let turn = player1;
-    turnField.textContent = `${player1.getName()}'s turn.`;
-
-    const changeTurn = () => {
-        if(turn.getSign() === player1.getSign()){
-            turn = player2;
-            turnField.textContent = `${player2.getName()}'s turn.`;
-        }
-        else{
-            turn = player1;
-            turnField.textContent = `${player1.getName()}'s turn.`;
-        }
+    const renderBoard = () => {
+        gameBoardEl.innerHTML = "";
+        gameboard.getBoard().forEach(value => {
+            let square = document.createElement('div');
+            square.classList.add('square');
+            let squareValue = document.createElement('span');
+            squareValue.textContent = value;
+            if(value){
+                square.appendChild(squareValue);
+            }
+            gameBoardEl.appendChild(square);
+        })
     };
 
+    const getPlayerTypes = () => {
+        playerOneErrorField.textContent = "";
+        playerTwoErrorField.textContent = "";
+        if(playerOneRadio[0].checked){
+            game.playerOne.name = 'Computer 1';
+            game.playerOne.type = 'computer';
+        }
+        else if(playerOneRadio[1].checked){
+            game.playerOne.type = 'human';
+            if(playerOneNameInput.value === ""){
+                game.playerOne.name = 'Player 1';
+            }
+            else{
+                game.playerOne.name = playerOneNameInput.value;
+            }
+        }
+        else {
+            playerOneErrorField.textContent = "Please select player 1 type.";
+            return false;
+        }
+        if(playerTwoRadio[0].checked){
+            game.playerTwo.name = 'Computer 2';
+            game.playerTwo.type = 'computer';
+        }
+        else if(playerTwoRadio[1].checked){
+            game.playerTwo.type = 'human'
+            if(playerTwoNameInput.value === ""){
+                game.playerTwo.name = 'Player 2';
+            }
+            else{
+                game.playerTwo.name = playerTwoNameInput.value;
+            }
+        }
+        else{
+            playerTwoErrorField.textContent = "Please select player 2 type.";
+            return false;
+        }
+        return true;
+    }
+
+    const showWhosTurn = (player) => {
+        if(player.name){
+            turnField.textContent = `${player.name}'s turn`;
+        }
+        else {
+            turnField.textContent = '';
+        }
+    }
+
+    const showWinCondition = (player) => {
+        if(player){
+            winnerField.textContent = `${player.name} won`;
+        }
+        else {
+            winnerField.textContent = "It's a tie";
+        }
+    }
+
+    const clearAll = () => {
+        turnField.textContent = '';
+        winnerField.textContent = '';
+    }
+
+    return {startButton, gameContainer, gameBoardEl, renderBoard, getPlayerTypes, showWhosTurn, showWinCondition, clearAll};
+})();
+
+const game = (() => {
+
+    let playerOne = {
+        name: '',
+        sign: 'X',
+        type: '',
+    };
+
+    let playerTwo = {
+        name: '',
+        sign: 'O',
+        type: '',
+    };
+
+    let turn = playerTwo;
+
+    const init = () => {
+        display.startButton.addEventListener('click', initEventFunctionWrapper);
+    };
+
+    const initEventFunctionWrapper = () => {
+        if(display.getPlayerTypes()){
+            startGame();
+        }
+    }
+
+    const resetEventFunctionWrapper = () => {
+        display.startButton.value = 'Start game';
+        display.startButton.removeEventListener('click', resetEventFunctionWrapper);
+        init();
+        display.gameContainer.style.display = 'none';
+        display.clearAll();
+    }
+
+    const startGame = () => {
+        display.startButton.value = 'Reset game';
+        display.startButton.removeEventListener('click', initEventFunctionWrapper);
+        display.startButton.addEventListener('click', resetEventFunctionWrapper);
+        gameboard.resetBoard();
+        display.gameContainer.style.display = 'flex';
+        display.renderBoard();
+        playGame();
+    };
+
+    const playGame = () => {
+        if(!checkWin()){
+            changePlayerTurn();
+            display.showWhosTurn(turn);
+            if(turn.type === 'human'){
+                humanPlay(turn.sign);
+            }
+            else if(turn.type === 'computer'){
+                setTimeout(() => {
+                    computerPlay(turn.sign)
+                }, 1500);
+            }
+        }
+        if(checkWin()){
+            display.showWinCondition(turn);
+        }
+    }
+
+    const changePlayerTurn = () => {
+        if(turn.sign === playerOne.sign){
+            turn = playerTwo;
+        }
+        else{
+            turn = playerOne;
+        }
+    }
+
+    const humanPlay = (sign) => {
+        let squares = Array.from(display.gameBoardEl.getElementsByClassName('square'));
+        squares.forEach(squre => {
+            squre.addEventListener('click', e => {
+                if(e.target.textContent === ""){
+                    let indexOfSquare = squares.indexOf(e.target);
+                    gameboard.updateBoard(sign, indexOfSquare);
+                    display.renderBoard();
+                    playGame();
+                }
+            }, {once: true});
+        })
+    }
+
+    const computerPlay = (sign) => {
+        const options = gameboard.getUnmarkedSquares();
+        let a = Math.floor(Math.random() * options.length);
+        gameboard.updateBoard(sign, options[a]);
+        display.renderBoard();
+        playGame();
+    }
+
     const checkWin = () => {
-        let currentBoard = board.getBoard();
+        let currentBoard = gameboard.getBoard();
         let xCounter, oCounter;
         let won = winConditions.some(condition => {
             xCounter = 0;
@@ -73,83 +242,18 @@ const game = (name1, name2) => {
             }
         });
         if(won && (xCounter == 3)){
-            winnerField.textContent = `${player1.getName()} won.`;
-            turnField.textContent = "";
             return true;
         }
         else if(won && (oCounter == 3)){
-            winnerField.textContent = `${player2.getName()} won`;
-            turnField.textContent = "";
             return true;
         }
         if(!won && (currentBoard.indexOf(0) == -1)){
-            winnerField.textContent = "It's a tie."
-            turnField.textContent = "";
             return true;
         }
         return false;
     }
 
-    const playGame = (htmlTarget, index) => {
-        turn.mark(htmlTarget);
-        board.updateBoard(turn.getSign(), index);
-        if(checkWin()){
-            return;
-        }
-        changeTurn();
-    }
-    return {playGame, checkWin};
-};
+    init();
 
-const display = (() =>{
-    const player1 = document.getElementsByName('player1');
-    const playerOneNameInput = document.getElementById('player1name');
-    const player2 = document.getElementsByName('player2');
-    const playerTwoNameInput = document.getElementById('player2name');
-    const start = document.getElementById('start');
-    const gameBoardEl = document.getElementsByClassName('gameboard')[0];
-    const squares = gameBoardEl.getElementsByClassName('square');
-    const winnerField = document.getElementsByClassName('showWinner')[0];
-    const restart = document.getElementById('restart');
-
-    let playerOneName, playerTwoName;
-
-    const startGame = () => {
-        if(player1[0].checked){
-            playerOneName = 'Computer 1';
-        }
-        else{
-            if(playerOneNameInput.value == ""){
-                playerOneName = 'Player 1';
-            }
-            else{
-                playerOneName = playerOneNameInput.value;
-            }
-        }
-        if(player2[0].checked){
-            playerTwoName = 'Computer 2';
-        }
-        else{
-            if(playerTwoNameInput.value == ""){
-                playerTwoName = 'Player 2';
-            }
-            else{
-                playerTwoName = playerTwoNameInput.value;
-            }
-        }
-        const newGame = game(playerOneName, playerTwoName);
-        winnerField.textContent = "";
-        Array.from(squares).forEach((square, index) => {
-            square.textContent = "";
-            square.addEventListener('click', e => {
-                if(!newGame.checkWin()){
-                    newGame.playGame(e.target, index);
-                }
-            }, {once: true});
-        });
-    };
-
-    start.addEventListener('click', startGame);
-
-    restart.addEventListener('click', startGame);
+    return {playerOne, playerTwo, checkWin};
 })();
